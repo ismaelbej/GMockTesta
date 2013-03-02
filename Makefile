@@ -1,14 +1,23 @@
 GTEST_DIR := /usr/src/gtest
 
+.PHONY: run clean
+
 main : main.o libgtest.a
-	g++ -o main main.o libgtest.a -lpthread -lgmock
+	g++ -std=c++11 -o main main.o libgtest.a -lpthread -lgmock
 
 main.o : main.cpp
-	g++ -c -o main.o main.cpp
+	g++ -std=c++11 -c -o main.o main.cpp
 
 libgtest.a : gtest-all.o
 	ar -rv libgtest.a gtest-all.o
 
 gtest-all.o : ${GTEST_DIR}/src/gtest-all.cc
 	g++ -g -o gtest-all.o -I${GTEST_DIR}/include -I${GTEST_DIR} -c ${GTEST_DIR}/src/gtest-all.cc
+
+run : main
+	./main
+
+
+clean:
+	rm main.o
 

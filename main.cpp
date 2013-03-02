@@ -18,17 +18,32 @@ public:
   MOCK_METHOD1(DoThis,int(int));
 };
 
+class ConcreteClass
+{
+public:
+  ConcreteClass(IFace* pIFace, int val)
+  {
+    _value = pIFace->DoThis(val);
+  }
+  int GetValue() const
+  {
+    return _value;
+  }
+private:
+  int _value;
+};
+
 TEST(Hello,World)
 {
   using ::testing::Return;
   using ::testing::_;
   MockIFace mockIFace;
-  EXPECT_CALL(mockIFace, DoThis(_))
-    .WillRepeatedly(Return(0));
+  ON_CALL(mockIFace, DoThis(_))
+    .WillByDefault(Return(0));
   EXPECT_CALL(mockIFace, DoThis(23))
     .WillOnce(Return(42));
-  EXPECT_EQ(42,mockIFace.DoThis(23));
-  EXPECT_EQ(0,mockIFace.DoThis(0));
+  ConcreteClass concrete(&mockIFace, 23);
+  EXPECT_EQ(42, concrete.GetValue());
 }
 
 int main(int argc, char** argv)
