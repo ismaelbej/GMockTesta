@@ -1,12 +1,14 @@
+CXX := g++ -std=c++11
+CXXFLAGS := -g
+LD := g++ -std=c++11
+LDFLAGS := -lpthread -lgmock
 GTEST_DIR := /usr/src/gtest
+OBJECTS := main.o
 
 .PHONY: run clean
 
-main : main.o libgtest.a
-	g++ -std=c++11 -o main main.o libgtest.a -lpthread -lgmock
-
-main.o : main.cpp
-	g++ -std=c++11 -c -o main.o main.cpp
+main : $(OBJECTS) libgtest.a
+	$(LD) -o $@ $^ $(LDFLAGS)
 
 libgtest.a : gtest-all.o
 	ar -rv libgtest.a gtest-all.o
@@ -14,10 +16,12 @@ libgtest.a : gtest-all.o
 gtest-all.o : ${GTEST_DIR}/src/gtest-all.cc
 	g++ -g -o gtest-all.o -I${GTEST_DIR}/include -I${GTEST_DIR} -c ${GTEST_DIR}/src/gtest-all.cc
 
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 run : main
 	./main
 
-
 clean:
-	rm main.o
+	rm $(OBJECTS)
 
