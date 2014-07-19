@@ -1,10 +1,10 @@
-CXX := c++ -std=c++11
-LD := c++ -std=c++11
-LDFLAGS := -lpthread
+CXX := c++ # -std=c++11
+LD := c++ # -std=c++11
+LDFLAGS := -std=c++11 -lpthread -lboost_regex
 GMOCK_DIR := /usr/src/gmock
 GTEST_DIR := /usr/src/gmock/gtest
 OBJECTS := main.o
-CXXFLAGS := -g -I${GMOCK_DIR}/gtest/include
+CXXFLAGS := -std=c++11 -g -I${GMOCK_DIR}/gtest/include
 
 .PHONY: run clean
 
